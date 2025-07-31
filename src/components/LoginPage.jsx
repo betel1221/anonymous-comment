@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext, ThemeContext } from '../App';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import logoImage from '../assets/logo.png'; // Make sure this path is correct relative to the component!
 
 // --- ADD THIS LINE (same as in App.jsx) ---
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
@@ -47,7 +48,7 @@ function LoginPage() {
         <h1>Techtonic Tribe</h1>
         <div className="logo-placeholder">
           {/* --- MODIFY THIS LINE --- */}
-          <img src={require('../assets/logo.png').default} alt="Techtonic Tribe Logo" />
+          <img src={logoImage} alt="Techtonic Tribe Logo"/>
           {/* OR, if you're not using require, you need to import it:
               import logoImage from '../assets/logo.png';
               <img src={logoImage} alt="Techtonic Tribe Logo" />
