@@ -1,12 +1,12 @@
 // vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite' // <-- Correct import for v4
+// import tailwindcss from '@tailwindcss/vite' // <--- REMOVE OR COMMENT OUT THIS LINE
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(), // <-- Correctly added the plugin
+    // tailwindcss(), // <--- REMOVE OR COMMENT OUT THIS LINE
   ],
 })
