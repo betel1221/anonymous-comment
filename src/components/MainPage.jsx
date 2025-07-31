@@ -3,6 +3,14 @@ import axios from 'axios';
 import { AuthContext, ThemeContext } from '../App';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+// --- ADD THIS LINE ---
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+// --- END ADDITION ---
+
+// --- ADD THIS LINE for logo ---
+import logoImage from '../assets/logo.png';
+// --- END ADDITION ---
+
 function MainPage({ handleLogout }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -19,7 +27,8 @@ function MainPage({ handleLogout }) {
   const [replies, setReplies] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/comments', {
+    // --- MODIFY THIS AXIOS CALL ---
+    axios.get(`${API_BASE_URL}/api/comments`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => setComments(res.data))
@@ -29,7 +38,8 @@ function MainPage({ handleLogout }) {
 
   const fetchReplies = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/user-replies', {
+      // --- MODIFY THIS AXIOS CALL ---
+      const response = await axios.get(`${API_BASE_URL}/api/user-replies`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setReplies(response.data);
@@ -46,8 +56,9 @@ function MainPage({ handleLogout }) {
     }
 
     try {
+      // --- MODIFY THIS AXIOS CALL ---
       const response = await axios.post(
-        'http://localhost:3000/api/comments',
+        `${API_BASE_URL}/api/comments`,
         { content: newComment, tag: selectedTag, status: 'new' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -63,13 +74,15 @@ function MainPage({ handleLogout }) {
   const handleChangeSubmit = async (e) => {
     e.preventDefault();
     try {
-      const loginResponse = await axios.post('http://localhost:3000/api/login', {
+      // --- MODIFY THIS AXIOS CALL ---
+      const loginResponse = await axios.post(`${API_BASE_URL}/api/login`, {
         username: prompt('Enter your username:'),
         password: currentPassword,
       });
       if (loginResponse.data.token) {
+        // --- MODIFY THIS AXIOS CALL ---
         await axios.post(
-          'http://localhost:3000/api/change-password',
+          `${API_BASE_URL}/api/change-password`,
           { username: changeUsername || prompt('Enter your username:'), newPassword },
           { headers: { Authorization: `Bearer ${loginResponse.data.token}` } }
         );
@@ -91,7 +104,8 @@ function MainPage({ handleLogout }) {
       <header className="main-header">
         <div className="header-content">
           <div className="logo-placeholder">
-            <img src="/src/assets/logo.png" alt="Techtonic Tribe Logo" />
+            {/* --- MODIFY THIS LINE for logo --- */}
+            <img src={logoImage} alt="Techtonic Tribe Logo" />
           </div>
           <span>User Side</span>
         </div>

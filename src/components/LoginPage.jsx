@@ -3,6 +3,10 @@ import axios from 'axios';
 import { AuthContext, ThemeContext } from '../App';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+// --- ADD THIS LINE (same as in App.jsx) ---
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+// --- END ADDITION ---
+
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -16,13 +20,17 @@ function LoginPage() {
     setError('');
     try {
       if (isSignUp) {
-        const response = await axios.post('http://localhost:3000/api/signup', { username, password, role: 'user' });
+        // --- MODIFY THIS LINE ---
+        const response = await axios.post(`${API_BASE_URL}/api/signup`, { username, password, role: 'user' });
+        // --- END MODIFICATION ---
         if (response.data.success) {
           setIsSignUp(false);
           setError('Account created. Please log in.');
         }
       } else {
-        const response = await axios.post('http://localhost:3000/api/login', { username, password });
+        // --- MODIFY THIS LINE ---
+        const response = await axios.post(`${API_BASE_URL}/api/login`, { username, password });
+        // --- END MODIFICATION ---
         setToken(response.data.token);
         setIsAuthenticated(true);
         setUserRole(response.data.role);
@@ -38,7 +46,12 @@ function LoginPage() {
       <header className="login-header">
         <h1>Techtonic Tribe</h1>
         <div className="logo-placeholder">
-          <img src="/src/assets/logo.png" alt="Techtonic Tribe Logo" />
+          {/* --- MODIFY THIS LINE --- */}
+          <img src={require('../assets/logo.png').default} alt="Techtonic Tribe Logo" />
+          {/* OR, if you're not using require, you need to import it:
+              import logoImage from '../assets/logo.png';
+              <img src={logoImage} alt="Techtonic Tribe Logo" />
+          */}
         </div>
       </header>
       <div className="login-actions">

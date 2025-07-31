@@ -3,6 +3,14 @@ import axios from 'axios';
 import { AuthContext, ThemeContext } from '../App';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+// --- ADD THIS LINE ---
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+// --- END ADDITION ---
+
+// --- ADD THIS LINE for logo ---
+import logoImage from '../assets/logo.png';
+// --- END ADDITION ---
+
 function AdminPanel({ handleLogout }) {
   const [comments, setComments] = useState([]);
   const [filter, setFilter] = useState({ category: '', keyword: '', date: '' });
@@ -18,7 +26,8 @@ function AdminPanel({ handleLogout }) {
   const [replyText, setReplyText] = useState({});
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/comments', {
+    // --- MODIFY THIS AXIOS CALL ---
+    axios.get(`${API_BASE_URL}/api/comments`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => setComments(res.data))
@@ -34,14 +43,16 @@ function AdminPanel({ handleLogout }) {
       } else if (reply) {
         updatedComment.reply = reply;
         updatedComment.status = 'replied';
-        await axios.post('http://localhost:3000/api/user-replies', {
+        // --- MODIFY THIS AXIOS CALL ---
+        await axios.post(`${API_BASE_URL}/api/user-replies`, {
           username: comment.username,
           reply,
           commentId: id,
         }, { headers: { Authorization: `Bearer ${token}` } });
       }
+      // --- MODIFY THIS AXIOS CALL ---
       const response = await axios.patch(
-        `http://localhost:3000/api/comments/${id}`,
+        `${API_BASE_URL}/api/comments/${id}`,
         { action: updatedComment.status, reply: updatedComment.reply },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -55,13 +66,15 @@ function AdminPanel({ handleLogout }) {
   const handleChangeSubmit = async (e) => {
     e.preventDefault();
     try {
-      const loginResponse = await axios.post('http://localhost:3000/api/login', {
+      // --- MODIFY THIS AXIOS CALL ---
+      const loginResponse = await axios.post(`${API_BASE_URL}/api/login`, {
         username: prompt('Enter your username:'),
         password: currentPassword,
       });
       if (loginResponse.data.token) {
+        // --- MODIFY THIS AXIOS CALL ---
         await axios.post(
-          'http://localhost:3000/api/change-password',
+          `${API_BASE_URL}/api/change-password`,
           { username: changeUsername || prompt('Enter your username:'), newPassword },
           { headers: { Authorization: `Bearer ${loginResponse.data.token}` } }
         );
@@ -94,7 +107,8 @@ function AdminPanel({ handleLogout }) {
       <header className="admin-header">
         <div className="header-content">
           <div className="logo-placeholder">
-            <img src="/src/assets/logo.png" alt="Techtonic Tribe Logo" />
+            {/* --- MODIFY THIS LINE for logo --- */}
+            <img src={logoImage} alt="Techtonic Tribe Logo" />
           </div>
           <span>Admin Side</span>
         </div>
@@ -126,6 +140,7 @@ function AdminPanel({ handleLogout }) {
           type="date"
           value={filter.date}
           onChange={(e) => setFilter({ ...filter, date: e.target.value })}
+          placeholder="Filter by date" // Added placeholder for clarity
           className="date-input"
         />
       </div>
